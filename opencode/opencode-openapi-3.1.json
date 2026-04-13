@@ -1,0 +1,2765 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenCode API",
+    "version": "current",
+    "description": "OpenCode API OpenAPI 3.1 draft generated from current repository routes. Suitable for Apifox import, documentation, and mock generation. This document focuses on stable route topology, common parameters, and representative request/response schemas."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4096",
+      "description": "Local default server"
+    }
+  ],
+  "tags": [
+    { "name": "Auth" },
+    { "name": "System" },
+    { "name": "Global" },
+    { "name": "Instance" },
+    { "name": "Project" },
+    { "name": "Session" },
+    { "name": "Message" },
+    { "name": "Part" },
+    { "name": "Permission" },
+    { "name": "Question" },
+    { "name": "Provider" },
+    { "name": "MCP" },
+    { "name": "File" },
+    { "name": "Config" },
+    { "name": "Event" },
+    { "name": "PTY" },
+    { "name": "Experimental" },
+    { "name": "TUI" }
+  ],
+  "paths": {
+    "/auth/{providerID}": {
+      "parameters": [{ "$ref": "#/components/parameters/providerID" }],
+      "put": {
+        "tags": ["Auth"],
+        "summary": "设置 Provider 认证凭据",
+        "operationId": "auth.set",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthSetRequest" },
+              "example": { "type": "api", "key": "YOUR_API_KEY" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      },
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "删除 Provider 认证凭据",
+        "operationId": "auth.remove",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/doc": {
+      "get": {
+        "tags": ["System"],
+        "summary": "获取 OpenAPI 文档",
+        "operationId": "system.doc",
+        "responses": {
+          "200": {
+            "description": "OpenAPI document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/log": {
+      "post": {
+        "tags": ["System"],
+        "summary": "写入服务端日志",
+        "operationId": "app.log",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LogRequest" },
+              "example": {
+                "service": "postman",
+                "level": "info",
+                "message": "hello",
+                "extra": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/global/health": {
+      "get": {
+        "tags": ["Global"],
+        "summary": "获取服务健康状态",
+        "operationId": "global.health",
+        "responses": {
+          "200": {
+            "description": "Health status",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Health" },
+                "example": { "healthy": true, "version": "1.0.0" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/global/event": {
+      "get": {
+        "tags": ["Global", "Event"],
+        "summary": "订阅全局事件流",
+        "operationId": "global.event",
+        "responses": {
+          "200": {
+            "description": "SSE stream",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/global/sync-event": {
+      "get": {
+        "tags": ["Global", "Event"],
+        "summary": "订阅全局同步事件流",
+        "operationId": "global.sync-event.subscribe",
+        "responses": {
+          "200": {
+            "description": "SSE stream",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/global/config": {
+      "get": {
+        "tags": ["Global", "Config"],
+        "summary": "获取全局配置",
+        "operationId": "global.config.get",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      },
+      "patch": {
+        "tags": ["Global", "Config"],
+        "summary": "更新全局配置",
+        "operationId": "global.config.update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/global/dispose": {
+      "post": {
+        "tags": ["Global", "Instance"],
+        "summary": "释放所有实例",
+        "operationId": "global.dispose",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/global/upgrade": {
+      "post": {
+        "tags": ["Global", "System"],
+        "summary": "升级 OpenCode",
+        "operationId": "global.upgrade",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpgradeRequest" },
+              "example": { "target": "latest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upgrade result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UpgradeResult" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/dispose": {
+      "post": {
+        "tags": ["Instance"],
+        "summary": "释放当前实例",
+        "operationId": "instance.dispose",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/path": {
+      "get": {
+        "tags": ["Instance"],
+        "summary": "获取路径信息",
+        "operationId": "path.get",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/vcs": {
+      "get": {
+        "tags": ["System"],
+        "summary": "获取版本控制信息",
+        "operationId": "vcs.get",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/vcs/diff": {
+      "get": {
+        "tags": ["System"],
+        "summary": "获取版本控制差异",
+        "operationId": "vcs.diff",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/command": {
+      "get": {
+        "tags": ["System"],
+        "summary": "列出命令",
+        "operationId": "command.list",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/agent": {
+      "get": {
+        "tags": ["System"],
+        "summary": "列出代理",
+        "operationId": "app.agents",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/skill": {
+      "get": {
+        "tags": ["System"],
+        "summary": "列出技能",
+        "operationId": "app.skills",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/lsp": {
+      "get": {
+        "tags": ["System"],
+        "summary": "获取 LSP 状态",
+        "operationId": "lsp.status",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/formatter": {
+      "get": {
+        "tags": ["System"],
+        "summary": "获取格式化器状态",
+        "operationId": "formatter.status",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/project": {
+      "get": {
+        "tags": ["Project"],
+        "summary": "列出项目",
+        "operationId": "project.list",
+        "responses": {
+          "200": {
+            "description": "Project list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ProjectInfo" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/current": {
+      "get": {
+        "tags": ["Project"],
+        "summary": "获取当前项目",
+        "operationId": "project.current",
+        "responses": {
+          "200": {
+            "description": "Current project",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/git/init": {
+      "post": {
+        "tags": ["Project"],
+        "summary": "初始化 Git 仓库",
+        "operationId": "project.initGit",
+        "responses": {
+          "200": {
+            "description": "Updated project",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/project/{projectID}": {
+      "parameters": [{ "$ref": "#/components/parameters/projectID" }],
+      "patch": {
+        "tags": ["Project"],
+        "summary": "更新项目信息",
+        "operationId": "project.update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProjectUpdateRequest" },
+              "example": { "name": "My Project" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated project",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session": {
+      "get": {
+        "tags": ["Session"],
+        "summary": "列出会话",
+        "operationId": "session.list",
+        "parameters": [
+          { "$ref": "#/components/parameters/directory" },
+          { "$ref": "#/components/parameters/roots" },
+          { "$ref": "#/components/parameters/start" },
+          { "$ref": "#/components/parameters/search" },
+          { "$ref": "#/components/parameters/limit" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SessionInfo" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Session"],
+        "summary": "创建会话",
+        "operationId": "session.create",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SessionCreateRequest" },
+              "example": { "title": "test session" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session/status": {
+      "get": {
+        "tags": ["Session"],
+        "summary": "获取所有会话状态",
+        "operationId": "session.status",
+        "responses": {
+          "200": {
+            "description": "Session status map",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": { "$ref": "#/components/schemas/AnyObject" }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/session/{sessionID}": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "get": {
+        "tags": ["Session"],
+        "summary": "获取会话详情",
+        "operationId": "session.get",
+        "responses": {
+          "200": {
+            "description": "Session info",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "patch": {
+        "tags": ["Session"],
+        "summary": "更新会话",
+        "operationId": "session.update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SessionUpdateRequest" },
+              "example": { "title": "renamed" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["Session"],
+        "summary": "删除会话",
+        "operationId": "session.delete",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/init": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "初始化会话",
+        "operationId": "session.init",
+        "deprecated": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {
+                "providerID": "openai",
+                "modelID": "gpt-4.1",
+                "messageID": "message_xxx"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/children": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "get": {
+        "tags": ["Session"],
+        "summary": "获取子会话",
+        "operationId": "session.children",
+        "responses": {
+          "200": {
+            "description": "Child sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SessionInfo" }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/todo": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "get": {
+        "tags": ["Session"],
+        "summary": "获取会话待办",
+        "operationId": "session.todo",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/fork": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "Fork 会话",
+        "operationId": "session.fork",
+        "responses": {
+          "200": {
+            "description": "Forked session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/session/{sessionID}/abort": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "中断会话运行",
+        "operationId": "session.abort",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/share": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "创建分享链接",
+        "operationId": "session.share",
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["Session"],
+        "summary": "取消分享",
+        "operationId": "session.unshare",
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/diff": {
+      "parameters": [
+        { "$ref": "#/components/parameters/sessionID" },
+        { "$ref": "#/components/parameters/messageIDQuery" }
+      ],
+      "get": {
+        "tags": ["Session"],
+        "summary": "获取指定消息产生的 diff",
+        "operationId": "session.diff",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/session/{sessionID}/summarize": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "摘要压缩会话",
+        "operationId": "session.summarize",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {
+                "providerID": "openai",
+                "modelID": "gpt-4.1",
+                "auto": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/message": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "get": {
+        "tags": ["Session", "Message"],
+        "summary": "获取会话消息列表",
+        "operationId": "session.messages",
+        "parameters": [{ "$ref": "#/components/parameters/limit" }, { "$ref": "#/components/parameters/before" }],
+        "responses": {
+          "200": {
+            "description": "Message list",
+            "headers": {
+              "Link": {
+                "description": "下一页链接",
+                "schema": { "type": "string" }
+              },
+              "X-Next-Cursor": {
+                "description": "下一页游标",
+                "schema": { "type": "string" }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Message" }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "post": {
+        "tags": ["Session", "Message"],
+        "summary": "发送消息",
+        "operationId": "session.prompt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PromptRequest" },
+              "example": {
+                "parts": [{ "type": "text", "text": "hello" }]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assistant response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PromptResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/message/{messageID}": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }, { "$ref": "#/components/parameters/messageID" }],
+      "get": {
+        "tags": ["Message"],
+        "summary": "获取单条消息",
+        "operationId": "session.message",
+        "responses": {
+          "200": {
+            "description": "Message",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Message" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["Message"],
+        "summary": "删除消息",
+        "operationId": "session.deleteMessage",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/message/{messageID}/part/{partID}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/sessionID" },
+        { "$ref": "#/components/parameters/messageID" },
+        { "$ref": "#/components/parameters/partID" }
+      ],
+      "patch": {
+        "tags": ["Part"],
+        "summary": "更新消息片段",
+        "operationId": "part.update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Part" },
+              "example": {
+                "id": "part_xxx",
+                "messageID": "message_xxx",
+                "sessionID": "session_xxx",
+                "type": "text",
+                "text": "patched text"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated part",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Part" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["Part"],
+        "summary": "删除消息片段",
+        "operationId": "part.delete",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/prompt_async": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "异步发送消息",
+        "operationId": "session.prompt_async",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PromptRequest" }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Accepted"
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/command": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "向会话发送命令",
+        "operationId": "session.command",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CommandRequest" },
+              "example": { "command": "/init" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assistant response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PromptResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/shell": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "在会话上下文执行 shell 命令",
+        "operationId": "session.shell",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ShellRequest" },
+              "example": { "command": "pwd" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assistant response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PromptResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/revert": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "回滚消息影响",
+        "operationId": "session.revert",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RevertRequest" },
+              "example": { "messageID": "message_xxx" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/unrevert": {
+      "parameters": [{ "$ref": "#/components/parameters/sessionID" }],
+      "post": {
+        "tags": ["Session"],
+        "summary": "恢复已回滚内容",
+        "operationId": "session.unrevert",
+        "responses": {
+          "200": {
+            "description": "Updated session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionInfo" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/session/{sessionID}/permissions/{permissionID}": {
+      "parameters": [
+        { "$ref": "#/components/parameters/sessionID" },
+        { "$ref": "#/components/parameters/permissionID" }
+      ],
+      "post": {
+        "tags": ["Permission"],
+        "summary": "回复权限请求",
+        "operationId": "permission.respond",
+        "deprecated": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PermissionRespondRequest" },
+              "example": { "response": "once" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/permission": {
+      "get": {
+        "tags": ["Permission"],
+        "summary": "列出待处理权限请求",
+        "operationId": "permission.list",
+        "responses": {
+          "200": {
+            "description": "Permission requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PermissionRequest" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/permission/{requestID}/reply": {
+      "parameters": [{ "$ref": "#/components/parameters/requestID" }],
+      "post": {
+        "tags": ["Permission"],
+        "summary": "回复权限请求",
+        "operationId": "permission.reply",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PermissionReplyRequest" },
+              "example": { "reply": "once" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/question": {
+      "get": {
+        "tags": ["Question"],
+        "summary": "列出待处理问题请求",
+        "operationId": "question.list",
+        "responses": {
+          "200": {
+            "description": "Question requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AnyObject" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/question/{requestID}/reply": {
+      "parameters": [{ "$ref": "#/components/parameters/requestID" }],
+      "post": {
+        "tags": ["Question"],
+        "summary": "回答问题请求",
+        "operationId": "question.reply",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuestionReplyRequest" },
+              "example": {
+                "answers": [["Use API key"], ["Production"]]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/question/{requestID}/reject": {
+      "parameters": [{ "$ref": "#/components/parameters/requestID" }],
+      "post": {
+        "tags": ["Question"],
+        "summary": "拒绝问题请求",
+        "operationId": "question.reject",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/provider": {
+      "get": {
+        "tags": ["Provider"],
+        "summary": "列出可用 Provider",
+        "operationId": "provider.list",
+        "responses": {
+          "200": {
+            "description": "Provider list",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProviderListResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provider/auth": {
+      "get": {
+        "tags": ["Provider"],
+        "summary": "获取 Provider 认证方式",
+        "operationId": "provider.auth",
+        "responses": {
+          "200": {
+            "description": "Provider auth methods",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/ProviderAuthMethod" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provider/{providerID}/oauth/authorize": {
+      "parameters": [{ "$ref": "#/components/parameters/providerID" }],
+      "post": {
+        "tags": ["Provider"],
+        "summary": "发起 Provider OAuth 授权",
+        "operationId": "provider.oauth.authorize",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProviderAuthorizeRequest" },
+              "example": { "method": 0, "inputs": {} }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorization data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [{ "$ref": "#/components/schemas/ProviderAuthorization" }, { "type": "null" }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provider/{providerID}/oauth/callback": {
+      "parameters": [{ "$ref": "#/components/parameters/providerID" }],
+      "post": {
+        "tags": ["Provider"],
+        "summary": "提交 Provider OAuth 回调结果",
+        "operationId": "provider.oauth.callback",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProviderCallbackRequest" },
+              "example": { "method": 0, "code": "AUTH_CODE" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/mcp": {
+      "get": {
+        "tags": ["MCP"],
+        "summary": "获取 MCP 服务状态",
+        "operationId": "mcp.status",
+        "responses": {
+          "200": {
+            "description": "MCP status map",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": { "$ref": "#/components/schemas/McpStatus" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["MCP"],
+        "summary": "动态添加 MCP 服务",
+        "operationId": "mcp.add",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/McpAddRequest" },
+              "example": {
+                "name": "example",
+                "config": {
+                  "type": "remote",
+                  "url": "https://example.com/mcp"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/mcp/{name}/auth": {
+      "parameters": [{ "$ref": "#/components/parameters/name" }],
+      "post": {
+        "tags": ["MCP"],
+        "summary": "发起 MCP OAuth",
+        "operationId": "mcp.auth.start",
+        "responses": {
+          "200": {
+            "description": "OAuth flow started",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AnyObject" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["MCP"],
+        "summary": "删除 MCP OAuth 凭据",
+        "operationId": "mcp.auth.remove",
+        "responses": {
+          "200": {
+            "description": "OAuth credentials removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "const": true }
+                  },
+                  "required": ["success"],
+                  "additionalProperties": false
+                },
+                "example": { "success": true }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/mcp/{name}/auth/callback": {
+      "parameters": [{ "$ref": "#/components/parameters/name" }],
+      "post": {
+        "tags": ["MCP"],
+        "summary": "完成 MCP OAuth 回调",
+        "operationId": "mcp.auth.callback",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/McpAuthCallbackRequest" },
+              "example": { "code": "AUTH_CODE" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MCP status",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/McpStatus" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/mcp/{name}/auth/authenticate": {
+      "parameters": [{ "$ref": "#/components/parameters/name" }],
+      "post": {
+        "tags": ["MCP"],
+        "summary": "自动执行 MCP OAuth 认证流程",
+        "operationId": "mcp.auth.authenticate",
+        "responses": {
+          "200": {
+            "description": "MCP status",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/McpStatus" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/mcp/{name}/connect": {
+      "parameters": [{ "$ref": "#/components/parameters/name" }],
+      "post": {
+        "tags": ["MCP"],
+        "summary": "连接 MCP 服务",
+        "operationId": "mcp.connect",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/mcp/{name}/disconnect": {
+      "parameters": [{ "$ref": "#/components/parameters/name" }],
+      "post": {
+        "tags": ["MCP"],
+        "summary": "断开 MCP 服务",
+        "operationId": "mcp.disconnect",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/find": {
+      "get": {
+        "tags": ["File"],
+        "summary": "全文搜索文本",
+        "operationId": "find.text",
+        "parameters": [{ "$ref": "#/components/parameters/pattern" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/find/file": {
+      "get": {
+        "tags": ["File"],
+        "summary": "搜索文件路径",
+        "operationId": "find.files",
+        "parameters": [
+          { "$ref": "#/components/parameters/query" },
+          { "$ref": "#/components/parameters/dirs" },
+          { "$ref": "#/components/parameters/fileType" },
+          { "$ref": "#/components/parameters/limit" }
+        ],
+        "responses": {
+          "200": {
+            "description": "File paths",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/find/symbol": {
+      "get": {
+        "tags": ["File"],
+        "summary": "搜索符号",
+        "operationId": "find.symbols",
+        "parameters": [{ "$ref": "#/components/parameters/query" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/file": {
+      "get": {
+        "tags": ["File"],
+        "summary": "列出文件或目录",
+        "operationId": "file.list",
+        "parameters": [{ "$ref": "#/components/parameters/pathQuery" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/file/content": {
+      "get": {
+        "tags": ["File"],
+        "summary": "读取文件内容",
+        "operationId": "file.read",
+        "parameters": [{ "$ref": "#/components/parameters/pathQuery" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/file/status": {
+      "get": {
+        "tags": ["File"],
+        "summary": "获取 Git 文件状态",
+        "operationId": "file.status",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/event": {
+      "get": {
+        "tags": ["Event"],
+        "summary": "订阅实例事件流",
+        "operationId": "event.subscribe",
+        "responses": {
+          "200": {
+            "description": "SSE stream",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config": {
+      "get": {
+        "tags": ["Config"],
+        "summary": "获取实例配置",
+        "operationId": "config.get",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      },
+      "patch": {
+        "tags": ["Config"],
+        "summary": "更新实例配置",
+        "operationId": "config.update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/config/providers": {
+      "get": {
+        "tags": ["Config", "Provider"],
+        "summary": "获取已配置 Provider 列表",
+        "operationId": "config.providers",
+        "responses": {
+          "200": {
+            "description": "Configured providers",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AnyObject" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pty": {
+      "get": {
+        "tags": ["PTY"],
+        "summary": "列出 PTY 会话",
+        "operationId": "pty.list",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      },
+      "post": {
+        "tags": ["PTY"],
+        "summary": "创建 PTY 会话",
+        "operationId": "pty.create",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {
+                "command": "bash",
+                "args": ["-l"],
+                "cwd": "/workspace",
+                "title": "Shell"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/pty/{ptyID}": {
+      "parameters": [{ "$ref": "#/components/parameters/ptyID" }],
+      "get": {
+        "tags": ["PTY"],
+        "summary": "获取 PTY 会话",
+        "operationId": "pty.get",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      },
+      "put": {
+        "tags": ["PTY"],
+        "summary": "更新 PTY 会话",
+        "operationId": "pty.update",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {
+                "title": "Build Terminal",
+                "size": { "rows": 40, "cols": 120 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      },
+      "delete": {
+        "tags": ["PTY"],
+        "summary": "删除 PTY 会话",
+        "operationId": "pty.remove",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/pty/{ptyID}/connect": {
+      "parameters": [{ "$ref": "#/components/parameters/ptyID" }, { "$ref": "#/components/parameters/ptyCursor" }],
+      "get": {
+        "tags": ["PTY"],
+        "summary": "连接 PTY 会话",
+        "operationId": "pty.connect",
+        "responses": {
+          "101": {
+            "description": "WebSocket upgrade"
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/experimental/console": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "获取当前 Console 元数据",
+        "operationId": "experimental.console.get",
+        "responses": {
+          "200": {
+            "description": "Console metadata",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AnyObject" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/experimental/console/orgs": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "列出可切换 Console 组织",
+        "operationId": "experimental.console.listOrgs",
+        "responses": {
+          "200": {
+            "description": "Switchable orgs",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AnyObject" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/experimental/console/switch": {
+      "post": {
+        "tags": ["Experimental"],
+        "summary": "切换当前 Console 组织",
+        "operationId": "experimental.console.switchOrg",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": { "accountID": "acc_xxx", "orgID": "org_xxx" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/experimental/tool/ids": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "列出工具 ID",
+        "operationId": "tool.ids",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayString" }
+        }
+      }
+    },
+    "/experimental/tool": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "列出工具及参数 Schema",
+        "operationId": "tool.list",
+        "parameters": [
+          { "$ref": "#/components/parameters/providerQuery" },
+          { "$ref": "#/components/parameters/modelQuery" }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/experimental/workspace": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "列出工作区",
+        "operationId": "experimental.workspace.list",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      },
+      "post": {
+        "tags": ["Experimental"],
+        "summary": "创建工作区",
+        "operationId": "experimental.workspace.create",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/experimental/workspace/status": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "获取工作区连接状态",
+        "operationId": "experimental.workspace.status",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      }
+    },
+    "/experimental/workspace/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/id" }],
+      "delete": {
+        "tags": ["Experimental"],
+        "summary": "删除工作区",
+        "operationId": "experimental.workspace.remove",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/experimental/worktree": {
+      "get": {
+        "tags": ["Experimental"],
+        "summary": "列出 worktree",
+        "operationId": "worktree.list",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ArrayObject" }
+        }
+      },
+      "post": {
+        "tags": ["Experimental"],
+        "summary": "创建 worktree",
+        "operationId": "worktree.create",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      },
+      "delete": {
+        "tags": ["Experimental"],
+        "summary": "删除 worktree",
+        "operationId": "worktree.remove",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": { "directory": "/tmp/project-worktree" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/experimental/worktree/reset": {
+      "post": {
+        "tags": ["Experimental"],
+        "summary": "重置 worktree",
+        "operationId": "worktree.reset",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": { "directory": "/tmp/project-worktree" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/experimental/session": {
+      "get": {
+        "tags": ["Experimental", "Session"],
+        "summary": "全局列出会话",
+        "operationId": "experimental.session.list",
+        "parameters": [
+          { "$ref": "#/components/parameters/directory" },
+          { "$ref": "#/components/parameters/roots" },
+          { "$ref": "#/components/parameters/start" },
+          { "$ref": "#/components/parameters/cursor" },
+          { "$ref": "#/components/parameters/search" },
+          { "$ref": "#/components/parameters/limit" },
+          { "$ref": "#/components/parameters/archived" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Global sessions",
+            "headers": {
+              "X-Next-Cursor": {
+                "description": "下一页游标",
+                "schema": { "type": "string" }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AnyObject" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/experimental/resource": {
+      "get": {
+        "tags": ["Experimental", "MCP"],
+        "summary": "列出 MCP 资源",
+        "operationId": "experimental.resource.list",
+        "responses": {
+          "200": {
+            "description": "MCP resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": { "$ref": "#/components/schemas/AnyObject" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tui/append-prompt": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "向 TUI 追加输入内容",
+        "operationId": "tui.appendPrompt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/tui/open-help": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "打开帮助面板",
+        "operationId": "tui.openHelp",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/open-sessions": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "打开会话面板",
+        "operationId": "tui.openSessions",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/open-themes": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "打开主题面板",
+        "operationId": "tui.openThemes",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/open-models": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "打开模型面板",
+        "operationId": "tui.openModels",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/submit-prompt": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "提交当前输入",
+        "operationId": "tui.submitPrompt",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/clear-prompt": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "清空当前输入",
+        "operationId": "tui.clearPrompt",
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/execute-command": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "执行 TUI 命令",
+        "operationId": "tui.executeCommand",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "command": { "type": "string" }
+                },
+                "required": ["command"],
+                "additionalProperties": false
+              },
+              "example": { "command": "agent_cycle" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/tui/show-toast": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "显示 TUI 提示",
+        "operationId": "tui.showToast",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    },
+    "/tui/publish": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "发布 TUI 事件",
+        "operationId": "tui.publish",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string" },
+                  "properties": { "$ref": "#/components/schemas/AnyObject" }
+                },
+                "required": ["type", "properties"],
+                "additionalProperties": false
+              },
+              "example": { "type": "tui.toast.show", "properties": {} }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/tui/select-session": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "在 TUI 中切换会话",
+        "operationId": "tui.selectSession",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sessionID": { "type": "string" }
+                },
+                "required": ["sessionID"],
+                "additionalProperties": false
+              },
+              "example": { "sessionID": "session_xxx" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/tui/control/next": {
+      "get": {
+        "tags": ["TUI"],
+        "summary": "获取下一条 TUI 控制请求",
+        "operationId": "tui.control.next",
+        "responses": {
+          "200": { "$ref": "#/components/responses/GenericObject" }
+        }
+      }
+    },
+    "/tui/control/response": {
+      "post": {
+        "tags": ["TUI"],
+        "summary": "提交 TUI 控制响应",
+        "operationId": "tui.control.response",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AnyObject" },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/BooleanOk" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "Optional. Used when OPENCODE_SERVER_PASSWORD is enabled in server mode."
+      }
+    },
+    "parameters": {
+      "providerID": {
+        "name": "providerID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "openai"
+      },
+      "projectID": {
+        "name": "projectID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "project_xxx"
+      },
+      "sessionID": {
+        "name": "sessionID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "session_xxx"
+      },
+      "messageID": {
+        "name": "messageID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "message_xxx"
+      },
+      "partID": {
+        "name": "partID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "part_xxx"
+      },
+      "permissionID": {
+        "name": "permissionID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "permission_xxx"
+      },
+      "requestID": {
+        "name": "requestID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "request_xxx"
+      },
+      "ptyID": {
+        "name": "ptyID",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "pty_xxx"
+      },
+      "name": {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "example"
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "workspace_xxx"
+      },
+      "directory": {
+        "name": "directory",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "按项目目录过滤"
+      },
+      "roots": {
+        "name": "roots",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "boolean" },
+        "description": "仅返回根会话"
+      },
+      "start": {
+        "name": "start",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "number" },
+        "description": "起始更新时间戳，毫秒"
+      },
+      "search": {
+        "name": "search",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "标题模糊搜索"
+      },
+      "limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer", "minimum": 0 },
+        "description": "返回数量上限"
+      },
+      "before": {
+        "name": "before",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "消息分页游标"
+      },
+      "cursor": {
+        "name": "cursor",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "number" },
+        "description": "分页游标或时间戳，具体取决于接口"
+      },
+      "archived": {
+        "name": "archived",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "boolean" },
+        "description": "是否包含归档会话"
+      },
+      "pattern": {
+        "name": "pattern",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "全文搜索正则或文本"
+      },
+      "query": {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "通用搜索词"
+      },
+      "pathQuery": {
+        "name": "path",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "文件或目录路径"
+      },
+      "messageIDQuery": {
+        "name": "messageID",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "消息 ID"
+      },
+      "providerQuery": {
+        "name": "provider",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "Provider ID"
+      },
+      "modelQuery": {
+        "name": "model",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "Model ID"
+      },
+      "dirs": {
+        "name": "dirs",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string", "enum": ["true", "false"] },
+        "description": "是否包含目录"
+      },
+      "fileType": {
+        "name": "type",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string", "enum": ["file", "directory"] },
+        "description": "搜索文件或目录"
+      },
+      "ptyCursor": {
+        "name": "cursor",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer", "minimum": -1 },
+        "description": "PTY 增量输出游标"
+      }
+    },
+    "responses": {
+      "BooleanOk": {
+        "description": "Boolean success result",
+        "content": {
+          "application/json": {
+            "schema": { "type": "boolean" },
+            "example": true
+          }
+        }
+      },
+      "GenericObject": {
+        "description": "Generic object response",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/AnyObject" },
+            "example": {}
+          }
+        }
+      },
+      "ArrayObject": {
+        "description": "Array of objects",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/AnyObject" }
+            },
+            "example": []
+          }
+        }
+      },
+      "ArrayString": {
+        "description": "Array of strings",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "example": []
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/BadRequestError" },
+            "example": {
+              "data": {},
+              "errors": [{ "path": ["field"], "message": "Invalid value" }],
+              "success": false
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/NotFoundError" },
+            "example": {
+              "name": "NotFoundError",
+              "message": "Resource not found"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "AnyObject": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "BadRequestError": {
+        "type": "object",
+        "properties": {
+          "data": {},
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "success": { "const": false }
+        },
+        "required": ["data", "errors", "success"],
+        "additionalProperties": false
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "message": { "type": "string" }
+        },
+        "required": ["message"],
+        "additionalProperties": true
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "healthy": { "const": true },
+          "version": { "type": "string" }
+        },
+        "required": ["healthy", "version"],
+        "additionalProperties": false
+      },
+      "LogRequest": {
+        "type": "object",
+        "properties": {
+          "service": { "type": "string" },
+          "level": { "type": "string", "enum": ["trace", "debug", "info", "warn", "error", "fatal"] },
+          "message": { "type": "string" },
+          "extra": { "$ref": "#/components/schemas/AnyObject" }
+        },
+        "required": ["service", "level", "message"]
+      },
+      "UpgradeRequest": {
+        "type": "object",
+        "properties": {
+          "target": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "UpgradeResult": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": { "const": true },
+              "version": { "type": "string" }
+            },
+            "required": ["success", "version"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "success": { "const": false },
+              "error": { "type": "string" }
+            },
+            "required": ["success", "error"],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "AuthSetRequest": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": { "const": "api" },
+              "key": { "type": "string" }
+            },
+            "required": ["type", "key"],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": { "const": "oauth" },
+              "access": { "type": "string" },
+              "refresh": { "type": "string" },
+              "expires": { "type": ["number", "null"] }
+            },
+            "required": ["type", "access"],
+            "additionalProperties": true
+          }
+        ]
+      },
+      "ProjectInfo": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": ["string", "null"] },
+          "icon": { "type": ["string", "null"] },
+          "worktree": { "type": ["string", "null"] },
+          "vcs": { "type": ["string", "null"] }
+        },
+        "required": ["id"],
+        "additionalProperties": true
+      },
+      "ProjectUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "icon": { "type": "string" },
+          "commands": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "additionalProperties": true
+      },
+      "SessionInfo": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "projectID": { "type": ["string", "null"] },
+          "workspaceID": { "type": ["string", "null"] },
+          "parentID": { "type": ["string", "null"] },
+          "title": { "type": ["string", "null"] },
+          "directory": { "type": ["string", "null"] },
+          "version": { "type": ["string", "null"] },
+          "share": { "type": ["string", "null"] }
+        },
+        "required": ["id"],
+        "additionalProperties": true
+      },
+      "SessionCreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "directory": { "type": "string" },
+          "workspaceID": { "type": "string" }
+        },
+        "additionalProperties": true
+      },
+      "SessionUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "share": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sessionID": { "type": ["string", "null"] },
+          "role": { "type": ["string", "null"] },
+          "createdAt": { "type": ["number", "string", "null"] },
+          "parts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Part" }
+          }
+        },
+        "required": ["id"],
+        "additionalProperties": true
+      },
+      "Part": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "messageID": { "type": "string" },
+          "sessionID": { "type": "string" },
+          "type": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": ["id", "messageID", "sessionID"],
+        "additionalProperties": true
+      },
+      "PromptPart": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": ["type"],
+        "additionalProperties": true
+      },
+      "PromptRequest": {
+        "type": "object",
+        "properties": {
+          "parts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PromptPart" }
+          }
+        },
+        "required": ["parts"],
+        "additionalProperties": true
+      },
+      "PromptResponse": {
+        "type": "object",
+        "properties": {
+          "info": { "$ref": "#/components/schemas/Message" },
+          "parts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Part" }
+          }
+        },
+        "required": ["info", "parts"],
+        "additionalProperties": true
+      },
+      "CommandRequest": {
+        "type": "object",
+        "properties": {
+          "command": { "type": "string" }
+        },
+        "required": ["command"],
+        "additionalProperties": true
+      },
+      "ShellRequest": {
+        "type": "object",
+        "properties": {
+          "command": { "type": "string" }
+        },
+        "required": ["command"],
+        "additionalProperties": true
+      },
+      "RevertRequest": {
+        "type": "object",
+        "properties": {
+          "messageID": { "type": "string" }
+        },
+        "required": ["messageID"],
+        "additionalProperties": true
+      },
+      "PermissionRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sessionID": { "type": "string" },
+          "permission": { "type": "string" },
+          "patterns": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "metadata": { "$ref": "#/components/schemas/AnyObject" },
+          "always": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["id", "sessionID", "permission", "patterns", "metadata", "always"],
+        "additionalProperties": true
+      },
+      "PermissionReplyRequest": {
+        "type": "object",
+        "properties": {
+          "reply": { "type": "string", "enum": ["once", "always", "reject"] },
+          "message": { "type": "string" }
+        },
+        "required": ["reply"],
+        "additionalProperties": false
+      },
+      "PermissionRespondRequest": {
+        "type": "object",
+        "properties": {
+          "response": { "type": "string", "enum": ["once", "always", "reject"] }
+        },
+        "required": ["response"],
+        "additionalProperties": false
+      },
+      "QuestionReplyRequest": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" }
+        },
+        "required": ["text"],
+        "additionalProperties": true
+      },
+      "ProviderInfo": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": ["string", "null"] },
+          "models": {
+            "type": "object",
+            "additionalProperties": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "required": ["id"],
+        "additionalProperties": true
+      },
+      "ProviderListResponse": {
+        "type": "object",
+        "properties": {
+          "all": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ProviderInfo" }
+          },
+          "default": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "connected": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["all", "default", "connected"],
+        "additionalProperties": false
+      },
+      "ProviderAuthMethod": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["oauth", "api"] },
+          "label": { "type": "string" },
+          "prompts": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "required": ["type", "label"],
+        "additionalProperties": true
+      },
+      "ProviderAuthorizeRequest": {
+        "type": "object",
+        "properties": {
+          "method": { "type": "integer" },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        },
+        "required": ["method"],
+        "additionalProperties": false
+      },
+      "ProviderAuthorization": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string" },
+          "method": { "type": "string", "enum": ["auto", "code"] },
+          "instructions": { "type": "string" }
+        },
+        "required": ["url", "method", "instructions"],
+        "additionalProperties": false
+      },
+      "ProviderCallbackRequest": {
+        "type": "object",
+        "properties": {
+          "method": { "type": "integer" },
+          "code": { "type": "string" }
+        },
+        "required": ["method"],
+        "additionalProperties": false
+      },
+      "McpOAuthConfig": {
+        "type": "object",
+        "properties": {
+          "clientId": { "type": "string" },
+          "clientSecret": { "type": "string" },
+          "scope": { "type": "string" },
+          "redirectUri": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "McpLocal": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "local" },
+          "command": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "environment": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "enabled": { "type": "boolean" },
+          "timeout": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["type", "command"],
+        "additionalProperties": false
+      },
+      "McpRemote": {
+        "type": "object",
+        "properties": {
+          "type": { "const": "remote" },
+          "url": { "type": "string" },
+          "enabled": { "type": "boolean" },
+          "headers": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "oauth": {
+            "oneOf": [{ "$ref": "#/components/schemas/McpOAuthConfig" }, { "const": false }]
+          },
+          "timeout": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["type", "url"],
+        "additionalProperties": false
+      },
+      "McpConfig": {
+        "oneOf": [{ "$ref": "#/components/schemas/McpLocal" }, { "$ref": "#/components/schemas/McpRemote" }]
+      },
+      "McpAddRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "mcp": { "$ref": "#/components/schemas/McpConfig" }
+        },
+        "required": ["name", "mcp"],
+        "additionalProperties": false
+      },
+      "McpAuthCallbackRequest": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" }
+        },
+        "required": ["code"],
+        "additionalProperties": false
+      },
+      "McpStatus": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "status": { "const": "connected" }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": { "const": "disabled" }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": { "const": "failed" },
+              "error": { "type": "string" }
+            },
+            "required": ["status", "error"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": { "const": "needs_auth" }
+            },
+            "required": ["status"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": { "const": "needs_client_registration" },
+              "error": { "type": "string" }
+            },
+            "required": ["status", "error"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  }
+}

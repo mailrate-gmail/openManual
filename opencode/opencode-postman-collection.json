@@ -1,0 +1,1633 @@
+{
+  "info": {
+    "name": "OpenCode API",
+    "_postman_id": "7f3e6f2d-2c2f-4d9d-a6b0-opencode-api",
+    "description": "OpenCode API Postman collection draft generated from current repository routes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4096"
+    },
+    {
+      "key": "providerID",
+      "value": "openai"
+    },
+    {
+      "key": "projectID",
+      "value": "project_xxx"
+    },
+    {
+      "key": "sessionID",
+      "value": "session_xxx"
+    },
+    {
+      "key": "messageID",
+      "value": "message_xxx"
+    },
+    {
+      "key": "partID",
+      "value": "part_xxx"
+    },
+    {
+      "key": "permissionID",
+      "value": "permission_xxx"
+    },
+    {
+      "key": "requestID",
+      "value": "request_xxx"
+    },
+    {
+      "key": "ptyID",
+      "value": "pty_xxx"
+    },
+    {
+      "key": "name",
+      "value": "example"
+    },
+    {
+      "key": "id",
+      "value": "workspace_xxx"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Set Provider Auth",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"api\",\n  \"key\": \"YOUR_API_KEY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/{{providerID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "{{providerID}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Provider Auth",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/auth/{{providerID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "{{providerID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "OpenAPI Doc",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/doc",
+              "host": ["{{baseUrl}}"],
+              "path": ["doc"]
+            }
+          }
+        },
+        {
+          "name": "Write Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"service\": \"postman\",\n  \"level\": \"info\",\n  \"message\": \"hello\",\n  \"extra\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/log",
+              "host": ["{{baseUrl}}"],
+              "path": ["log"]
+            }
+          }
+        },
+        {
+          "name": "Get Path",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/path",
+              "host": ["{{baseUrl}}"],
+              "path": ["path"]
+            }
+          }
+        },
+        {
+          "name": "Get VCS",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/vcs",
+              "host": ["{{baseUrl}}"],
+              "path": ["vcs"]
+            }
+          }
+        },
+        {
+          "name": "Get VCS Diff",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/vcs/diff",
+              "host": ["{{baseUrl}}"],
+              "path": ["vcs", "diff"]
+            }
+          }
+        },
+        {
+          "name": "List Commands",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/command",
+              "host": ["{{baseUrl}}"],
+              "path": ["command"]
+            }
+          }
+        },
+        {
+          "name": "List Agents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/agent",
+              "host": ["{{baseUrl}}"],
+              "path": ["agent"]
+            }
+          }
+        },
+        {
+          "name": "List Skills",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/skill",
+              "host": ["{{baseUrl}}"],
+              "path": ["skill"]
+            }
+          }
+        },
+        {
+          "name": "LSP Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/lsp",
+              "host": ["{{baseUrl}}"],
+              "path": ["lsp"]
+            }
+          }
+        },
+        {
+          "name": "Formatter Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/formatter",
+              "host": ["{{baseUrl}}"],
+              "path": ["formatter"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Global",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/global/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "health"]
+            }
+          }
+        },
+        {
+          "name": "Global Event SSE",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/global/event",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "event"]
+            },
+            "description": "SSE endpoint"
+          }
+        },
+        {
+          "name": "Global Sync Event SSE",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/global/sync-event",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "sync-event"]
+            },
+            "description": "SSE endpoint"
+          }
+        },
+        {
+          "name": "Get Global Config",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/global/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "config"]
+            }
+          }
+        },
+        {
+          "name": "Patch Global Config",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/global/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "config"]
+            }
+          }
+        },
+        {
+          "name": "Dispose All Instances",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/global/dispose",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "dispose"]
+            }
+          }
+        },
+        {
+          "name": "Upgrade OpenCode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target\": \"latest\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/global/upgrade",
+              "host": ["{{baseUrl}}"],
+              "path": ["global", "upgrade"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Instance",
+      "item": [
+        {
+          "name": "Dispose Instance",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/instance/dispose",
+              "host": ["{{baseUrl}}"],
+              "path": ["instance", "dispose"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Project",
+      "item": [
+        {
+          "name": "List Projects",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/project",
+              "host": ["{{baseUrl}}"],
+              "path": ["project"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Project",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/project/current",
+              "host": ["{{baseUrl}}"],
+              "path": ["project", "current"]
+            }
+          }
+        },
+        {
+          "name": "Init Git",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/project/git/init",
+              "host": ["{{baseUrl}}"],
+              "path": ["project", "git", "init"]
+            }
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Project\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/project/{{projectID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["project", "{{projectID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Session",
+      "item": [
+        {
+          "name": "List Sessions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session",
+              "host": ["{{baseUrl}}"],
+              "path": ["session"]
+            }
+          }
+        },
+        {
+          "name": "Session Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "status"]
+            }
+          }
+        },
+        {
+          "name": "Create Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"test session\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session",
+              "host": ["{{baseUrl}}"],
+              "path": ["session"]
+            }
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}"]
+            }
+          }
+        },
+        {
+          "name": "Patch Session",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"renamed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Session",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}"]
+            }
+          }
+        },
+        {
+          "name": "Init Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/init",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "init"]
+            },
+            "description": "Deprecated"
+          }
+        },
+        {
+          "name": "Get Session Children",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/children",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "children"]
+            }
+          }
+        },
+        {
+          "name": "Get Session Todo",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/todo",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "todo"]
+            }
+          }
+        },
+        {
+          "name": "Fork Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/fork",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "fork"]
+            }
+          }
+        },
+        {
+          "name": "Abort Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/abort",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "abort"]
+            }
+          }
+        },
+        {
+          "name": "Share Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/share",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "share"]
+            }
+          }
+        },
+        {
+          "name": "Unshare Session",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/share",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "share"]
+            }
+          }
+        },
+        {
+          "name": "Get Session Diff",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/diff",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "diff"]
+            }
+          }
+        },
+        {
+          "name": "Summarize Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/summarize",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "summarize"]
+            }
+          }
+        },
+        {
+          "name": "List Messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/message",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "message"]
+            }
+          }
+        },
+        {
+          "name": "Get Message",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/message/{{messageID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "message", "{{messageID}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Message",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/message/{{messageID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "message", "{{messageID}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Part",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/message/{{messageID}}/part/{{partID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "message", "{{messageID}}", "part", "{{partID}}"]
+            }
+          }
+        },
+        {
+          "name": "Patch Part",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{partID}}\",\n  \"messageID\": \"{{messageID}}\",\n  \"sessionID\": \"{{sessionID}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/message/{{messageID}}/part/{{partID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "message", "{{messageID}}", "part", "{{partID}}"]
+            }
+          }
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parts\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"hello\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/message",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "message"]
+            }
+          }
+        },
+        {
+          "name": "Send Async Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parts\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"hello async\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/prompt_async",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "prompt_async"]
+            }
+          }
+        },
+        {
+          "name": "Send Command",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"command\": \"/init\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/command",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "command"]
+            }
+          }
+        },
+        {
+          "name": "Run Shell",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"command\": \"pwd\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/shell",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "shell"]
+            }
+          }
+        },
+        {
+          "name": "Revert Session Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messageID\": \"{{messageID}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/revert",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "revert"]
+            }
+          }
+        },
+        {
+          "name": "Unrevert Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/unrevert",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "unrevert"]
+            }
+          }
+        },
+        {
+          "name": "Deprecated Permission Reply",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"response\": \"once\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/session/{{sessionID}}/permissions/{{permissionID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["session", "{{sessionID}}", "permissions", "{{permissionID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permission",
+      "item": [
+        {
+          "name": "List Permission Requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/permission",
+              "host": ["{{baseUrl}}"],
+              "path": ["permission"]
+            }
+          }
+        },
+        {
+          "name": "Reply Permission Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reply\": \"once\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/permission/{{requestID}}/reply",
+              "host": ["{{baseUrl}}"],
+              "path": ["permission", "{{requestID}}", "reply"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Question",
+      "item": [
+        {
+          "name": "List Questions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/question",
+              "host": ["{{baseUrl}}"],
+              "path": ["question"]
+            }
+          }
+        },
+        {
+          "name": "Reply Question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"answer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/question/{{requestID}}/reply",
+              "host": ["{{baseUrl}}"],
+              "path": ["question", "{{requestID}}", "reply"]
+            }
+          }
+        },
+        {
+          "name": "Reject Question",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/question/{{requestID}}/reject",
+              "host": ["{{baseUrl}}"],
+              "path": ["question", "{{requestID}}", "reject"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "item": [
+        {
+          "name": "List Providers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/provider",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider"]
+            }
+          }
+        },
+        {
+          "name": "Get Provider Auth Methods",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/provider/auth",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "auth"]
+            }
+          }
+        },
+        {
+          "name": "Provider OAuth Authorize",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": 0,\n  \"inputs\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/provider/{{providerID}}/oauth/authorize",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "{{providerID}}", "oauth", "authorize"]
+            }
+          }
+        },
+        {
+          "name": "Provider OAuth Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": 0,\n  \"code\": \"AUTH_CODE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/provider/{{providerID}}/oauth/callback",
+              "host": ["{{baseUrl}}"],
+              "path": ["provider", "{{providerID}}", "oauth", "callback"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MCP",
+      "item": [
+        {
+          "name": "Get MCP Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/mcp",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp"]
+            }
+          }
+        },
+        {
+          "name": "Add MCP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"example\",\n  \"mcp\": {\n    \"type\": \"remote\",\n    \"url\": \"https://example.com/mcp\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/mcp",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp"]
+            }
+          }
+        },
+        {
+          "name": "Start MCP Auth",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/mcp/{{name}}/auth",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp", "{{name}}", "auth"]
+            }
+          }
+        },
+        {
+          "name": "MCP Auth Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"AUTH_CODE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/mcp/{{name}}/auth/callback",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp", "{{name}}", "auth", "callback"]
+            }
+          }
+        },
+        {
+          "name": "Authenticate MCP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/mcp/{{name}}/auth/authenticate",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp", "{{name}}", "auth", "authenticate"]
+            }
+          }
+        },
+        {
+          "name": "Remove MCP Auth",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/mcp/{{name}}/auth",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp", "{{name}}", "auth"]
+            }
+          }
+        },
+        {
+          "name": "Connect MCP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/mcp/{{name}}/connect",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp", "{{name}}", "connect"]
+            }
+          }
+        },
+        {
+          "name": "Disconnect MCP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/mcp/{{name}}/disconnect",
+              "host": ["{{baseUrl}}"],
+              "path": ["mcp", "{{name}}", "disconnect"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "File",
+      "item": [
+        {
+          "name": "Find Text",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/find",
+              "host": ["{{baseUrl}}"],
+              "path": ["find"]
+            }
+          }
+        },
+        {
+          "name": "Find Files",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/find/file",
+              "host": ["{{baseUrl}}"],
+              "path": ["find", "file"]
+            }
+          }
+        },
+        {
+          "name": "Find Symbols",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/find/symbol",
+              "host": ["{{baseUrl}}"],
+              "path": ["find", "symbol"]
+            }
+          }
+        },
+        {
+          "name": "List File",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/file",
+              "host": ["{{baseUrl}}"],
+              "path": ["file"]
+            }
+          }
+        },
+        {
+          "name": "Read File Content",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/file/content",
+              "host": ["{{baseUrl}}"],
+              "path": ["file", "content"]
+            }
+          }
+        },
+        {
+          "name": "File Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/file/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["file", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Config",
+      "item": [
+        {
+          "name": "Get Config",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["config"]
+            }
+          }
+        },
+        {
+          "name": "Patch Config",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["config"]
+            }
+          }
+        },
+        {
+          "name": "Configured Providers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/config/providers",
+              "host": ["{{baseUrl}}"],
+              "path": ["config", "providers"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Event",
+      "item": [
+        {
+          "name": "Instance Event SSE",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/event",
+              "host": ["{{baseUrl}}"],
+              "path": ["event"]
+            },
+            "description": "SSE endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PTY",
+      "item": [
+        {
+          "name": "List PTY",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pty",
+              "host": ["{{baseUrl}}"],
+              "path": ["pty"]
+            }
+          }
+        },
+        {
+          "name": "Create PTY",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pty",
+              "host": ["{{baseUrl}}"],
+              "path": ["pty"]
+            }
+          }
+        },
+        {
+          "name": "Get PTY",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pty/{{ptyID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["pty", "{{ptyID}}"]
+            }
+          }
+        },
+        {
+          "name": "Update PTY",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pty/{{ptyID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["pty", "{{ptyID}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete PTY",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/pty/{{ptyID}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["pty", "{{ptyID}}"]
+            }
+          }
+        },
+        {
+          "name": "Connect PTY",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pty/{{ptyID}}/connect",
+              "host": ["{{baseUrl}}"],
+              "path": ["pty", "{{ptyID}}", "connect"]
+            },
+            "description": "WebSocket endpoint"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Experimental",
+      "item": [
+        {
+          "name": "Get Console",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/console",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "console"]
+            }
+          }
+        },
+        {
+          "name": "List Console Orgs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/console/orgs",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "console", "orgs"]
+            }
+          }
+        },
+        {
+          "name": "Switch Console Org",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/experimental/console/switch",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "console", "switch"]
+            }
+          }
+        },
+        {
+          "name": "Tool IDs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/tool/ids",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "tool", "ids"]
+            }
+          }
+        },
+        {
+          "name": "Tool List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/tool",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "tool"]
+            }
+          }
+        },
+        {
+          "name": "List Workspace",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/workspace",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "workspace"]
+            }
+          }
+        },
+        {
+          "name": "Create Workspace",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/experimental/workspace",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "workspace"]
+            }
+          }
+        },
+        {
+          "name": "Workspace Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/workspace/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "workspace", "status"]
+            }
+          }
+        },
+        {
+          "name": "Delete Workspace",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/workspace/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "workspace", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "List Worktree",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/worktree",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "worktree"]
+            }
+          }
+        },
+        {
+          "name": "Create Worktree",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/experimental/worktree",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "worktree"]
+            }
+          }
+        },
+        {
+          "name": "Delete Worktree",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/worktree",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "worktree"]
+            }
+          }
+        },
+        {
+          "name": "Reset Worktree",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/worktree/reset",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "worktree", "reset"]
+            }
+          }
+        },
+        {
+          "name": "Experimental Session List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/session",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "session"]
+            }
+          }
+        },
+        {
+          "name": "Experimental Resource List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/experimental/resource",
+              "host": ["{{baseUrl}}"],
+              "path": ["experimental", "resource"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "TUI",
+      "item": [
+        {
+          "name": "Append Prompt",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/append-prompt",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "append-prompt"]
+            }
+          }
+        },
+        {
+          "name": "Open Help",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/open-help",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "open-help"]
+            }
+          }
+        },
+        {
+          "name": "Open Sessions",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/open-sessions",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "open-sessions"]
+            }
+          }
+        },
+        {
+          "name": "Open Themes",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/open-themes",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "open-themes"]
+            }
+          }
+        },
+        {
+          "name": "Open Models",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/open-models",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "open-models"]
+            }
+          }
+        },
+        {
+          "name": "Submit Prompt",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/submit-prompt",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "submit-prompt"]
+            }
+          }
+        },
+        {
+          "name": "Clear Prompt",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/clear-prompt",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "clear-prompt"]
+            }
+          }
+        },
+        {
+          "name": "Execute Command",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/execute-command",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "execute-command"]
+            }
+          }
+        },
+        {
+          "name": "Show Toast",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/show-toast",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "show-toast"]
+            }
+          }
+        },
+        {
+          "name": "Publish TUI Event",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "publish"]
+            }
+          }
+        },
+        {
+          "name": "Select Session",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/select-session",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "select-session"]
+            }
+          }
+        },
+        {
+          "name": "TUI Control Next",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/tui/control/next",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "control", "next"]
+            }
+          }
+        },
+        {
+          "name": "TUI Control Response",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/tui/control/response",
+              "host": ["{{baseUrl}}"],
+              "path": ["tui", "control", "response"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
